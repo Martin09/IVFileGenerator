@@ -26,10 +26,11 @@ class MyWindow(QtGui.QMainWindow):
         
         #Set default values
         self.startVoltage = 0
-        self.endVoltage = 50
-        self.NPoints = 26
-        self.duty = 8
-        self.pulseFactor = 0.5
+        self.endVoltage = 3
+        self.NPoints = 16
+        self.duty = 3
+        self.pulseFactor = 1.0
+        self.CorrWavePts = 1
         self.saved = False
         self.filename = '.'
         
@@ -41,6 +42,7 @@ class MyWindow(QtGui.QMainWindow):
         # Connect up the checkboxes
         self.cbInvert.stateChanged.connect(self.updateSetpoints)
         self.cbBack.stateChanged.connect(self.updateSetpoints)
+        self.cbCorrWave.stateChanged.connect(self.updateSetpoints)
         
         # Connect combobox
         self.cbTestType.currentIndexChanged.connect(self.updateSetpoints)
@@ -51,6 +53,7 @@ class MyWindow(QtGui.QMainWindow):
         self.leNPoints.editingFinished.connect(self.updateSetpoints)
         self.leDuty.editingFinished.connect(self.updateSetpoints)
         self.lePulseFact.editingFinished.connect(self.updateSetpoints)
+        self.leCorrWavePts.editingFinished.connect(self.updateSetpoints)
         
         # Create validators to validate the inputs (ints or doubles)
         self.leStartV.setValidator(QtGui.QDoubleValidator())
@@ -58,6 +61,7 @@ class MyWindow(QtGui.QMainWindow):
         self.leNPoints.setValidator(QtGui.QIntValidator())    
         self.leDuty.setValidator(QtGui.QIntValidator())
         self.lePulseFact.setValidator(QtGui.QDoubleValidator())
+        self.leCorrWavePts.setValidator(QtGui.QIntValidator())       
         
         #Apply defaults to line edit fields in GUI
         self.leStartV.setText(str(self.startVoltage))
@@ -65,6 +69,7 @@ class MyWindow(QtGui.QMainWindow):
         self.leNPoints.setText(str(self.NPoints))        
         self.leDuty.setText(str(self.duty))
         self.lePulseFact.setText(str(self.pulseFactor))       
+        self.leCorrWavePts.setText(str(self.CorrWavePts))  
         
         #Add NavigationToolbar
         self.mplwidget.figure.set_dpi(150)
@@ -81,10 +86,10 @@ class MyWindow(QtGui.QMainWindow):
         self.updateSetpoints()        
         
     def openDoc(self):
-        fileName = QtGui.QFileDialog.getOpenFileName(self, 'Choose file to open', self.fileName, filter='*.iv')
+        fileName = QtGui.QFileDialog.getOpenFileName(self, 'Choose file to open', None, filter='*.iv')
         if fileName:
             self.filename = fileName
-            print fileName        
+            print fileName
     def saveDoc(self):
         if self.filename is None:
             self.saveAsDoc()
@@ -98,6 +103,8 @@ class MyWindow(QtGui.QMainWindow):
             f.write('# duty:%i' % self.duty+'\n')
             f.write('# cbBack:%i' % self.cbBack.checkState()+'\n')
             f.write('# cbInvert:%i' % self.cbInvert.checkState()+'\n')
+            f.write('# corrWaveform:%i' % self.cbCorrWave.checkState()+'\n')
+            f.write('# corrWavePts:%i' % self.CorrWavePts + '\n')
             for i in self.setPoints:
                 f.write('%E' % i+'\n')
             f.close()            
@@ -124,13 +131,19 @@ class MyWindow(QtGui.QMainWindow):
             yVals = np.append(yVals,yVals[0:-1][::-1]) #Reverse array and remove duplicate value where they are joined
         if self.cbInvert.checkState():
             yVals = np.append(-yVals[::-1][0:-1],yVals)
+
+        self.leCorrWavePts.setEnabled(False)
+        self.cbCorrWave.setEnabled(False)
         
         if (self.cbTestType.currentText() == "Pulsed AC")or(self.cbTestType.currentText() == "Pulsed DC"):
             self.leDuty.setEnabled(True)
-            self.lePulseFact.setEnabled(False)
+            self.lePulseFact.setEnabled(False)          
             pulsedAC = False
             if self.cbTestType.currentText() == "Pulsed AC":
                 self.lePulseFact.setEnabled(True)
+                self.cbCorrWave.setEnabled(True)
+                if self.cbCorrWave.checkState():
+                    self.leCorrWavePts.setEnabled(True)                
                 pulsedAC = True
             yAC = np.array([])
             dataPtsX = np.array([])
@@ -142,6 +155,11 @@ class MyWindow(QtGui.QMainWindow):
                 dataPtsX = np.append(dataPtsX,len(yAC))                
                 if pulsedAC: #If pulsed AC add the opposite pulse
                     yAC = np.append(yAC, -yVals[i]*self.pulseFactor)
+                    if self.cbCorrWave.checkState(): #Add correction wave
+                        polarity = 1
+                        for k in range(1,int(self.leCorrWavePts.text())+1):
+                            yAC = np.append(yAC, yVals[i]*self.pulseFactor/pow(2,k)*polarity)
+                            polarity = polarity * -1
                 dataPtsY = np.append(dataPtsY,yVals[i])
             yVals = yAC
             xVals = np.array(range(len(yVals)))+1            

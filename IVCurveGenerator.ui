@@ -18,6 +18,20 @@
     <bool>false</bool>
    </property>
    <layout class="QGridLayout" name="gridLayout_3">
+    <item row="0" column="1">
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="MatplotlibWidget" name="mplwidget">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
     <item row="0" column="0">
      <widget class="QFrame" name="frame">
       <property name="maximumSize">
@@ -35,55 +49,18 @@
       <property name="frameShadow">
        <enum>QFrame::Raised</enum>
       </property>
-      <layout class="QGridLayout" name="gridLayout_2" rowstretch="0,0,0,0,0,0,0,0,0,0" rowminimumheight="0,0,0,0,0,0,0,0,0,0" columnminimumwidth="0">
+      <layout class="QGridLayout" name="gridLayout_2" rowstretch="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0">
        <property name="sizeConstraint">
         <enum>QLayout::SetMaximumSize</enum>
        </property>
-       <item row="7" column="0">
-        <widget class="QPushButton" name="pbSaveAs">
-         <property name="text">
-          <string>Save As</string>
-         </property>
-        </widget>
-       </item>
-       <item row="9" column="0">
-        <widget class="QPushButton" name="pbExit">
-         <property name="text">
-          <string>Exit</string>
-         </property>
-        </widget>
-       </item>
-       <item row="8" column="0">
-        <spacer name="verticalSpacer">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeType">
-          <enum>QSizePolicy::Minimum</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="6" column="0">
-        <widget class="QPushButton" name="pbSave">
-         <property name="text">
-          <string>Save</string>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="0">
+       <item row="10" column="0">
         <widget class="QPushButton" name="pbOpen">
          <property name="text">
           <string>Open</string>
          </property>
         </widget>
        </item>
-       <item row="3" column="0">
+       <item row="8" column="0">
         <layout class="QHBoxLayout" name="horizontalLayout">
          <property name="spacing">
           <number>15</number>
@@ -99,6 +76,9 @@
            <property name="text">
             <string>Invert</string>
            </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
           </widget>
          </item>
          <item>
@@ -106,17 +86,86 @@
            <property name="text">
             <string>Back</string>
            </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
           </widget>
          </item>
         </layout>
        </item>
+       <item row="0" column="0">
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <property name="spacing">
+          <number>15</number>
+         </property>
+         <property name="sizeConstraint">
+          <enum>QLayout::SetFixedSize</enum>
+         </property>
+         <property name="leftMargin">
+          <number>10</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>Sweep Type:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="cbTestType">
+           <item>
+            <property name="text">
+             <string>Pulsed AC</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Pulsed DC</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Linear</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="13" column="0">
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Minimum</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="12" column="0">
+        <widget class="QPushButton" name="pbSaveAs">
+         <property name="text">
+          <string>Save As</string>
+         </property>
+        </widget>
+       </item>
+       <item row="11" column="0">
+        <widget class="QPushButton" name="pbSave">
+         <property name="text">
+          <string>Save</string>
+         </property>
+        </widget>
+       </item>
        <item row="1" column="0">
         <layout class="QGridLayout" name="gridLayout">
-         <item row="0" column="1">
-          <widget class="QLineEdit" name="leStartV">
-           <property name="inputMethodHints">
-            <set>Qt::ImhDigitsOnly</set>
-           </property>
+         <item row="1" column="1">
+          <widget class="QLineEdit" name="leEndV">
            <property name="text">
             <string>0</string>
            </property>
@@ -129,20 +178,23 @@
            </property>
           </widget>
          </item>
-         <item row="3" column="0">
-          <widget class="QLabel" name="lbDuty">
-           <property name="text">
-            <string>Duty Cycle:</string>
+         <item row="0" column="1">
+          <widget class="QLineEdit" name="leStartV">
+           <property name="inputMethodHints">
+            <set>Qt::ImhDigitsOnly</set>
            </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           <property name="text">
+            <string>0</string>
            </property>
           </widget>
          </item>
-         <item row="1" column="1">
-          <widget class="QLineEdit" name="leEndV">
+         <item row="3" column="0">
+          <widget class="QLabel" name="lbDuty">
            <property name="text">
-            <string>0</string>
+            <string>Rest Points:</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
           </widget>
          </item>
@@ -222,61 +274,50 @@
          </item>
         </layout>
        </item>
-       <item row="0" column="0">
-        <layout class="QHBoxLayout" name="horizontalLayout_2">
-         <property name="spacing">
-          <number>15</number>
+       <item row="14" column="0">
+        <widget class="QPushButton" name="pbExit">
+         <property name="text">
+          <string>Exit</string>
          </property>
-         <property name="sizeConstraint">
-          <enum>QLayout::SetFixedSize</enum>
-         </property>
-         <property name="leftMargin">
-          <number>10</number>
-         </property>
+        </widget>
+       </item>
+       <item row="6" column="0">
+        <layout class="QVBoxLayout" name="verticalLayout_2">
          <item>
-          <widget class="QLabel" name="label">
+          <widget class="QCheckBox" name="cbCorrWave">
            <property name="text">
-            <string>Sweep Type:</string>
+            <string>Correction Waverform</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QComboBox" name="cbTestType">
+          <layout class="QHBoxLayout" name="horizontalLayout_3">
            <item>
-            <property name="text">
-             <string>Pulsed AC</string>
-            </property>
+            <widget class="QLabel" name="label_2">
+             <property name="text">
+              <string>Number of Pts:</string>
+             </property>
+            </widget>
            </item>
            <item>
-            <property name="text">
-             <string>Pulsed DC</string>
-            </property>
+            <widget class="QLineEdit" name="leCorrWavePts">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>3</string>
+             </property>
+            </widget>
            </item>
-           <item>
-            <property name="text">
-             <string>Linear</string>
-            </property>
-           </item>
-          </widget>
+          </layout>
          </item>
         </layout>
        </item>
       </layout>
      </widget>
-    </item>
-    <item row="0" column="1">
-     <layout class="QVBoxLayout" name="verticalLayout">
-      <item>
-       <widget class="MatplotlibWidget" name="mplwidget">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-       </widget>
-      </item>
-     </layout>
     </item>
    </layout>
   </widget>
